@@ -1,0 +1,72 @@
+volumes:
+  db_data:
+
+services:
+  db:
+    image: pgvector/pgvector:pg15
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-digital_twin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - mqtt-broker
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-digital_twin}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://127.0.0.1}
+    volumes:
+      - ./backend:/app
+
+  mqtt-broker:
+    build:
+      context: ./mqtt-broker
+      dockerfile: Dockerfile
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt-broker/config:/mosquitto/config
+      - ./mqtt-broker/data:/mosquitto/data
+      - ./mqtt-broker/log:/mosquitto/log
+    restart: unless-stopped
+
+  mqtt-replay:
+    build:
+      context: ./mqtt-replay
+      dockerfile: Dockerfile
+    depends_on:
+      - mqtt-broker
+    environment:
+      MQTT_HOST: ${MQTT_HOST:-mqtt-broker}
+      MQTT_PORT: ${MQTT_PORT:-1883}
+      SPEED: ${SPEED:-1.0}
+    volumes:
+      - ./mqtt-replay/simple_process.csv:/app/simple_process.csv:ro

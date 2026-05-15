@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: digitaltwin
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # dev-friendly; use validate/none or Flyway in prod
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    show-sql: false # Disable SQL logging
+    properties.hibernate.format_sql: false # Disable formatted SQL output
+
+  mqtt:
+    # since you're running both services in docker-compose,
+    # the broker is reachable at service name "mqtt-broker"
+    broker-url: tcp://mqtt-broker:1883
+    client-id: ${SPRING_MQTT_CLIENT_ID:java-receiver}
+    # no auth needed
+    username:
+    password:
+    # the topic(s) you want to subscribe to:
+    topic: "PLC/#"
