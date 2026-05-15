@@ -1,4 +1,4 @@
-# 2025 Programmierpraktikum
+# A Digital Twin Exemplar for a Fischertechnik Production Line
 
 ## Development
 
