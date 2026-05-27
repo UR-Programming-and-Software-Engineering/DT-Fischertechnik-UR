@@ -109,3 +109,6 @@ localhost:8080
 or the configured frontend port.
 
 The user can then monitor the Digital Twin, replay MQTT data and run simulations of the Fischertechnik production line.
+
+## Links
+[fischertechnik Maschines](https://www.fischertechnik.de/de-de/produkte/industrie-und-hochschulen)
