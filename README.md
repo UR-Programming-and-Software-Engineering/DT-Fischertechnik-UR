@@ -111,6 +111,6 @@ or the configured frontend port.
 The user can then monitor the Digital Twin, replay MQTT data and run simulations of the Fischertechnik production line.
 
 ## Links
-* [This projects' Wiki](https://github.com/UR-Programming-and-Software-Engineering/DT-Fischertechnik-UR/wiki) with further explanations about the sytsem architecture and MQTT data analysis results
+* [This projects' Wiki](https://github.com/UR-Programming-and-Software-Engineering/DT-Fischertechnik-UR/wiki) with further explanations about the system architecture and MQTT data analysis results
 * Description of the [Fischertechnik maschines](https://www.fischertechnik.de/de-de/produkte/industrie-und-hochschulen) from the Fischertechnik company
 
