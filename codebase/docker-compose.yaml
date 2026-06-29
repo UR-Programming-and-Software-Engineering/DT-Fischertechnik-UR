@@ -69,4 +69,4 @@ services:
       MQTT_PORT: ${MQTT_PORT:-1883}
       SPEED: ${SPEED:-1.0}
     volumes:
-      - ./mqtt-replay/simple_process.csv:/app/simple_process.csv:ro
+      - . /app/simple_process.csv:ro
